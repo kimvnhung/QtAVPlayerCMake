@@ -19,7 +19,7 @@
 // We mean it.
 //
 
-#include <QtAVPlayer/qavvideoframe.h>
+#include "qavvideoframe.h"
 #include <QVariant>
 
 QT_BEGIN_NAMESPACE
@@ -29,13 +29,14 @@ class QAVVideoBuffer
 {
 public:
     QAVVideoBuffer() = default;
-    explicit QAVVideoBuffer(const QAVVideoFrame &frame) : m_frame(frame) { }
+    explicit QAVVideoBuffer(const QAVVideoFrame &frame) : m_frame(frame) {}
     virtual ~QAVVideoBuffer() = default;
     const QAVVideoFrame &frame() const { return m_frame; }
 
     virtual QAVVideoFrame::MapData map() = 0;
     virtual QAVVideoFrame::HandleType handleType() const { return QAVVideoFrame::NoHandle; }
-    virtual QVariant handle(QRhi */*rhi*/ = nullptr) const { return {}; }
+    virtual QVariant handle(QRhi * /*rhi*/ = nullptr) const { return {}; }
+
 protected:
     QAVVideoFrame m_frame;
 };

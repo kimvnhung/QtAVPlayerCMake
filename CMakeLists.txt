@@ -104,10 +104,8 @@ endforeach()
 # Include the include directory
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}"
+        ${CMAKE_BINARY_DIR}
 )
-# Get the absolute path
-get_filename_component(ABSOLUTE_INCLUDE "${CMAKE_CURRENT_BINARY_DIR}/../" ABSOLUTE)
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
@@ -119,13 +117,9 @@ target_link_libraries(${PROJECT_NAME}
 
 if(WIN32)
     set(FFMPEG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg)
+    message("FFMPEG DIR " ${FFMPEG_DIR})
     target_sources(${PROJECT_NAME} PRIVATE
         ${SOURCE_DIR}/qavhwdevice_d3d11.cpp
-    )
-
-    target_include_directories(${PROJECT_NAME}
-        PUBLIC
-            "${FFMPEG_DIR}/include"
     )
 
     file(GLOB_RECURSE DLL_FILES "${FFMPEG_DIR}/*.dll")
@@ -139,6 +133,11 @@ if(WIN32)
     target_link_libraries(${PROJECT_NAME}
         PRIVATE
             ${LIB_FILES}
+    )
+
+    target_include_directories(${PROJECT_NAME}
+        PUBLIC
+            "${FFMPEG_DIR}/include"
     )
 endif()
 
