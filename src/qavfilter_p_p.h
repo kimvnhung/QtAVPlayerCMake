@@ -19,8 +19,8 @@
 // We mean it.
 //
 
-#include "qavframe.h"
-#include "qavstream.h"
+#include <QtAVPlayer/qavframe.h>
+#include <QtAVPlayer/qavstream.h>
 #include <QList>
 #include <QMutex>
 
@@ -31,7 +31,7 @@ class QAVFilterPrivate
 {
     Q_DECLARE_PUBLIC(QAVFilter)
 public:
-    QAVFilterPrivate(QAVFilter *q, QMutex &mutex) : q_ptr(q), graphMutex(mutex) {}
+    QAVFilterPrivate(QAVFilter *q, QMutex &mutex) : q_ptr(q), graphMutex(mutex) { }
     virtual ~QAVFilterPrivate() = default;
 
     QAVFilter *q_ptr = nullptr;

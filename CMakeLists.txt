@@ -9,102 +9,107 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 include(GNUInstallDirs)
 
-find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Gui Widgets)
-find_package(Qt${QT_VERSION_MAJOR} OPTIONAL_COMPONENTS Multimedia)
-# find_package(EGL)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Concurrent Gui Widgets Multimedia)
+find_package(EGL)
 find_package(X11)
-# find_package(WrapOpenGL)
+find_package(WrapOpenGL)
 
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-# Define the list of source files
-set(SOURCES
-    ${SOURCE_DIR}/qavaudiocodec.cpp
-    ${SOURCE_DIR}/qavaudiofilter.cpp
-    ${SOURCE_DIR}/qavaudioframe.cpp
-    ${SOURCE_DIR}/qavaudioinputfilter.cpp
-    ${SOURCE_DIR}/qavaudiooutputfilter.cpp
-    ${SOURCE_DIR}/qavcodec.cpp
-    ${SOURCE_DIR}/qavdemuxer.cpp
-    ${SOURCE_DIR}/qavfilter.cpp
-    ${SOURCE_DIR}/qavfiltergraph.cpp
-    ${SOURCE_DIR}/qavfilters.cpp
-    ${SOURCE_DIR}/qavframe.cpp
-    ${SOURCE_DIR}/qavframecodec.cpp
-    ${SOURCE_DIR}/qavinoutfilter.cpp
-    ${SOURCE_DIR}/qaviodevice.cpp
-    ${SOURCE_DIR}/qavpacket.cpp
-    ${SOURCE_DIR}/qavplayer.cpp
-    ${SOURCE_DIR}/qavstream.cpp
-    ${SOURCE_DIR}/qavstreamframe.cpp
-    ${SOURCE_DIR}/qavsubtitlecodec.cpp
-    ${SOURCE_DIR}/qavsubtitleframe.cpp
-    ${SOURCE_DIR}/qavvideobuffer_cpu.cpp
-    ${SOURCE_DIR}/qavvideobuffer_gpu.cpp
-    ${SOURCE_DIR}/qavvideocodec.cpp
-    ${SOURCE_DIR}/qavvideofilter.cpp
-    ${SOURCE_DIR}/qavvideoframe.cpp
-    ${SOURCE_DIR}/qavvideoinputfilter.cpp
-    ${SOURCE_DIR}/qavvideooutputfilter.cpp
-)
-
 # Define the list of header files
-set(HEADERS
-    ${SOURCE_DIR}/qavaudiocodec_p.h
-    ${SOURCE_DIR}/qavaudiofilter_p.h
-    ${SOURCE_DIR}/qavaudioformat.h
-    ${SOURCE_DIR}/qavaudioframe.h
-    ${SOURCE_DIR}/qavaudioinputfilter_p.h
-    ${SOURCE_DIR}/qavaudiooutputfilter_p.h
+set(PRIVATE_HEADERS
     ${SOURCE_DIR}/qavcodec_p.h
     ${SOURCE_DIR}/qavcodec_p_p.h
-    ${SOURCE_DIR}/qavdemuxer_p.h
-    ${SOURCE_DIR}/qavfilter_p.h
-    ${SOURCE_DIR}/qavfilter_p_p.h
-    ${SOURCE_DIR}/qavfiltergraph_p.h
-    ${SOURCE_DIR}/qavfilters_p.h
-    ${SOURCE_DIR}/qavframe.h
-    ${SOURCE_DIR}/qavframe_p.h
     ${SOURCE_DIR}/qavframecodec_p.h
+    ${SOURCE_DIR}/qavaudiocodec_p.h
+    ${SOURCE_DIR}/qavvideocodec_p.h
+    ${SOURCE_DIR}/qavsubtitlecodec_p.h
     ${SOURCE_DIR}/qavhwdevice_p.h
     ${SOURCE_DIR}/qavhwdevice_cuda_p.h
-    ${SOURCE_DIR}/qavinoutfilter_p.h
-    ${SOURCE_DIR}/qaviodevice.h
+    ${SOURCE_DIR}/qavdemuxer_p.h
     ${SOURCE_DIR}/qavpacket_p.h
+    ${SOURCE_DIR}/qavstreamframe_p.h
+    ${SOURCE_DIR}/qavframe_p.h
     ${SOURCE_DIR}/qavpacketqueue_p.h
-    ${SOURCE_DIR}/qavplayer.h
-    ${SOURCE_DIR}/qavstream.h
-    ${SOURCE_DIR}/qavstreamframe.h
-    ${SOURCE_DIR}/qavsubtitlecodec_p.h
-    ${SOURCE_DIR}/qavsubtitleframe.h
     ${SOURCE_DIR}/qavvideobuffer_p.h
     ${SOURCE_DIR}/qavvideobuffer_cpu_p.h
     ${SOURCE_DIR}/qavvideobuffer_gpu_p.h
-    ${SOURCE_DIR}/qavvideocodec_p.h
+    ${SOURCE_DIR}/qavfilter_p.h
+    ${SOURCE_DIR}/qavfilter_p_p.h
     ${SOURCE_DIR}/qavvideofilter_p.h
-    ${SOURCE_DIR}/qavvideoframe.h
+    ${SOURCE_DIR}/qavaudiofilter_p.h
+    ${SOURCE_DIR}/qavfiltergraph_p.h
+    ${SOURCE_DIR}/qavinoutfilter_p.h
+    ${SOURCE_DIR}/qavinoutfilter_p_p.h
     ${SOURCE_DIR}/qavvideoinputfilter_p.h
+    ${SOURCE_DIR}/qavaudioinputfilter_p.h
     ${SOURCE_DIR}/qavvideooutputfilter_p.h
+    ${SOURCE_DIR}/qavaudiooutputfilter_p.h
+    ${SOURCE_DIR}/qavfilters_p.h
+)
+
+set(PUBLIC_HEADERS
+    ${SOURCE_DIR}/qaviodevice.h
+    ${SOURCE_DIR}/qavaudioformat.h
+    ${SOURCE_DIR}/qavstreamframe.h
+    ${SOURCE_DIR}/qavframe.h
+    ${SOURCE_DIR}/qavvideoframe.h
+    ${SOURCE_DIR}/qavaudioframe.h
+    ${SOURCE_DIR}/qavsubtitleframe.h
     ${SOURCE_DIR}/qtavplayerglobal.h
+    ${SOURCE_DIR}/qavstream.h
+    ${SOURCE_DIR}/qavplayer.h
+)
+
+# Define the list of source files
+set(SOURCES
+    ${SOURCE_DIR}/qavplayer.cpp
+    ${SOURCE_DIR}/qavcodec.cpp
+    ${SOURCE_DIR}/qavframecodec.cpp
+    ${SOURCE_DIR}/qavaudiocodec.cpp
+    ${SOURCE_DIR}/qavvideocodec.cpp
+    ${SOURCE_DIR}/qavsubtitlecodec.cpp
+    ${SOURCE_DIR}/qavdemuxer.cpp
+    ${SOURCE_DIR}/qavpacket.cpp
+    ${SOURCE_DIR}/qavframe.cpp
+    ${SOURCE_DIR}/qavstreamframe.cpp
+    ${SOURCE_DIR}/qavvideoframe.cpp
+    ${SOURCE_DIR}/qavaudioframe.cpp
+    ${SOURCE_DIR}/qavsubtitleframe.cpp
+    ${SOURCE_DIR}/qavvideobuffer_cpu.cpp
+    ${SOURCE_DIR}/qavvideobuffer_gpu.cpp
+    ${SOURCE_DIR}/qavfilter.cpp
+    ${SOURCE_DIR}/qavvideofilter.cpp
+    ${SOURCE_DIR}/qavaudiofilter.cpp
+    ${SOURCE_DIR}/qavfiltergraph.cpp
+    ${SOURCE_DIR}/qavinoutfilter.cpp
+    ${SOURCE_DIR}/qavvideoinputfilter.cpp
+    ${SOURCE_DIR}/qavaudioinputfilter.cpp
+    ${SOURCE_DIR}/qavvideooutputfilter.cpp
+    ${SOURCE_DIR}/qavaudiooutputfilter.cpp
+    ${SOURCE_DIR}/qaviodevice.cpp
+    ${SOURCE_DIR}/qavstream.cpp
+    ${SOURCE_DIR}/qavfilters.cpp
 )
 
 
 
-add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS} )
+
+
+add_library(${PROJECT_NAME} ${SOURCES} ${PRIVATE_HEADERS} ${PUBLIC_HEADERS})
 
 message("Lib folder " ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
 
 # Copy header files to a specific directory
-foreach(HEADER ${HEADERS})
-    configure_file(${HEADER} ${CMAKE_BINARY_DIR}/${PROJECT_NAME} COPYONLY)
+foreach(HEADER ${PUBLIC_HEADERS})
+    configure_file(${HEADER} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 endforeach()
 
 # Include the include directory
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        ${CMAKE_BINARY_DIR}
+        ${CMAKE_CURRENT_BINARY_DIR}/../
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -120,6 +125,7 @@ if(WIN32)
     message("FFMPEG DIR " ${FFMPEG_DIR})
     target_sources(${PROJECT_NAME} PRIVATE
         ${SOURCE_DIR}/qavhwdevice_d3d11.cpp
+        ${SOURCE_DIR}/qavhwdevice_d3d11_p.h
     )
 
     file(GLOB_RECURSE DLL_FILES "${FFMPEG_DIR}/*.dll")
@@ -246,11 +252,5 @@ if(ANDROID AND ANDROID_TARGET_ARCH___equals___x86_64)
     )
 endif()
 
-# install(TARGETS ${PROJECT_NAME}
-# BUNDLE DESTINATION .
-# RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-# )
 
-# Consider using qt_generate_deploy_app_script() for app deployment if
-# the project can use Qt 6.3. In that case rerun qmake2cmake with
-# --min-qt-version=6.3.
+

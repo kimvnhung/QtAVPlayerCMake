@@ -8,7 +8,7 @@
 #ifndef QAVFIODEVICE_P_H
 #define QAVFIODEVICE_P_H
 
-#include "qtavplayerglobal.h"
+#include <QtAVPlayer/qtavplayerglobal.h>
 #include <QIODevice>
 #include <QSharedPointer>
 #include <memory>

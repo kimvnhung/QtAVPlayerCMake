@@ -19,7 +19,7 @@
 // We mean it.
 //
 
-#include "qtavplayerglobal.h"
+#include <QtAVPlayer/qtavplayerglobal.h>
 #include "qavframe.h"
 #include "qavfilter_p.h"
 #include "qavdemuxer_p.h"
