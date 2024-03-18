@@ -10,13 +10,14 @@ set(CMAKE_AUTOMOC ON)
 include(GNUInstallDirs)
 
 find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Gui)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Gui Widgets)
 find_package(Qt${QT_VERSION_MAJOR} OPTIONAL_COMPONENTS Multimedia)
-find_package(EGL)
+# find_package(EGL)
 find_package(X11)
-find_package(WrapOpenGL)
+# find_package(WrapOpenGL)
 
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 # Define the list of source files
 set(SOURCES
     ${SOURCE_DIR}/qavaudiocodec.cpp
@@ -46,7 +47,6 @@ set(SOURCES
     ${SOURCE_DIR}/qavvideoframe.cpp
     ${SOURCE_DIR}/qavvideoinputfilter.cpp
     ${SOURCE_DIR}/qavvideooutputfilter.cpp
-    ${SOURCE_DIR}/qtavplayerglobal.h
 )
 
 # Define the list of header files
@@ -86,67 +86,79 @@ set(HEADERS
     ${SOURCE_DIR}/qavvideoframe.h
     ${SOURCE_DIR}/qavvideoinputfilter_p.h
     ${SOURCE_DIR}/qavvideooutputfilter_p.h
+    ${SOURCE_DIR}/qtavplayerglobal.h
 )
 
-add_library(${PROJECT_NAME} SHARED
-    ${SOURCES} ${HEADERS}
-)
+
+
+add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS} )
+
+message("Lib folder " ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
 
 # Copy header files to a specific directory
-foreach(HEADER ${HEADER_FILES})
-    configure_file(${HEADER} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+foreach(HEADER ${HEADERS})
+    configure_file(${HEADER} ${CMAKE_BINARY_DIR}/${PROJECT_NAME} COPYONLY)
 endforeach()
 
 # Include the include directory
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        ${CMAKE_CURRENT_BINARY_DIR}/../
-    PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/../
+        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}"
 )
+# Get the absolute path
+get_filename_component(ABSOLUTE_INCLUDE "${CMAKE_CURRENT_BINARY_DIR}/../" ABSOLUTE)
 
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    Qt::Concurrent
-    Qt::Core
-    Qt::Gui
-    avcodec
-    avdevice
-    avfilter
-    avformat
-    avutil
-    swresample
-    swscale
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        Qt::Concurrent
+        Qt::Core
+        Qt${QT_VERSION_MAJOR}::Gui
+        Qt${QT_VERSION_MAJOR}::Widgets
 )
 
 if(WIN32)
-    target_sources(${PROJECT_NAME} PUBLIC
+    set(FFMPEG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg)
+    target_sources(${PROJECT_NAME} PRIVATE
         ${SOURCE_DIR}/qavhwdevice_d3d11.cpp
     )
 
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ../ffmpeg/include
+    target_include_directories(${PROJECT_NAME}
+        PUBLIC
+            "${FFMPEG_DIR}/include"
     )
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        # Remove: L${CMAKE_CURRENT_SOURCE_DIR}/../ffmpeg/bin
-        # Remove: L${CMAKE_CURRENT_SOURCE_DIR}/../ffmpeg/lib
+    file(GLOB_RECURSE DLL_FILES "${FFMPEG_DIR}/*.dll")
+
+    foreach(DLL_FILE ${DLL_FILES})
+        configure_file(${DLL_FILE} ${CMAKE_BINARY_DIR} COPYONLY)
+    endforeach()
+
+    file(GLOB_RECURSE LIB_FILES "${FFMPEG_DIR}/*.lib")
+
+    target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+            ${LIB_FILES}
     )
 endif()
 
-if(DEFINES___contains___QT_AVPLAYER_MULTIMEDIA)
-    target_sources(${PROJECT_NAME} PUBLIC
-        ${SOURCE_DIR}/qavaudiooutput.cpp ${SOURCE_DIR}/qavaudiooutput.h
-    )
-
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        Qt::Multimedia
-    )
+if(NOT EXISTS ENABLE_MULTIMEDIA)
+    set(ENABLE_MULTIMEDIA "TRUE")
 endif()
 
-if((DEFINES___contains___QT_AVPLAYER_MULTIMEDIA) AND ((QT_VERSION_MAJOR EQUAL 6)))
+if(${ENABLE_MULTIMEDIA} STREQUAL "TRUE")
     target_link_libraries(${PROJECT_NAME} PRIVATE
-        Qt::MultimediaPrivate
+        Qt${QT_VERSION_MAJOR}::Multimedia
+    )
+    target_compile_definitions(${PROJECT_NAME} PUBLIC QT_AVPLAYER_MULTIMEDIA)
+    if(QT_VERSION_MAJOR EQUAL 6)
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+            Qt${QT_VERSION_MAJOR}::MultimediaPrivate
+        )
+    endif()
+    target_sources(${PROJECT_NAME} PRIVATE
+        ${SOURCE_DIR}/qavaudiooutput.cpp
+        ${SOURCE_DIR}/qavaudiooutput.h
     )
 endif()
 
@@ -209,32 +221,36 @@ endif()
 
 if(ANDROID AND ANDROID_TARGET_ARCH___equals___armeabi-v7a)
     target_link_libraries(${PROJECT_NAME} PRIVATE
+
         # Remove: L$ENV{AVPLAYER_ANDROID_LIB_ARMEABI_V7A}
     )
 endif()
 
 if(ANDROID AND ANDROID_TARGET_ARCH___equals___arm64-v8a)
     target_link_libraries(${PROJECT_NAME} PRIVATE
+
         # Remove: L$ENV{AVPLAYER_ANDROID_LIB_ARMEABI_V8A}
     )
 endif()
 
 if(ANDROID AND ANDROID_TARGET_ARCH___equals___x86)
     target_link_libraries(${PROJECT_NAME} PRIVATE
+
         # Remove: L$ENV{AVPLAYER_ANDROID_LIB_X86}
     )
 endif()
 
 if(ANDROID AND ANDROID_TARGET_ARCH___equals___x86_64)
     target_link_libraries(${PROJECT_NAME} PRIVATE
+
         # Remove: L$ENV{AVPLAYER_ANDROID_LIB_X86_64}
     )
 endif()
 
-install(TARGETS ${PROJECT_NAME}
-    BUNDLE DESTINATION .
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+# install(TARGETS ${PROJECT_NAME}
+# BUNDLE DESTINATION .
+# RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+# )
 
 # Consider using qt_generate_deploy_app_script() for app deployment if
 # the project can use Qt 6.3. In that case rerun qmake2cmake with
