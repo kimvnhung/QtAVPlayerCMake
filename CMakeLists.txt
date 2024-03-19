@@ -9,7 +9,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 include(GNUInstallDirs)
 
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Concurrent Gui Widgets Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Concurrent Widgets Multimedia)
 find_package(EGL)
 find_package(X11)
 find_package(WrapOpenGL)
@@ -116,7 +116,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
         Qt::Concurrent
         Qt::Core
-        Qt${QT_VERSION_MAJOR}::Gui
+        # Qt${QT_VERSION_MAJOR}::Gui
         Qt${QT_VERSION_MAJOR}::Widgets
 )
 
