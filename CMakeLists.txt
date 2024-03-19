@@ -96,7 +96,7 @@ set(SOURCES
 
 
 
-add_library(${PROJECT_NAME} ${SOURCES} ${PRIVATE_HEADERS} ${PUBLIC_HEADERS})
+add_library(${PROJECT_NAME} STATIC ${SOURCES} ${PRIVATE_HEADERS} ${PUBLIC_HEADERS})
 
 message("Lib folder " ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
@@ -131,13 +131,13 @@ if(WIN32)
     file(GLOB_RECURSE DLL_FILES "${FFMPEG_DIR}/*.dll")
 
     foreach(DLL_FILE ${DLL_FILES})
-        configure_file(${DLL_FILE} ${CMAKE_BINARY_DIR} COPYONLY)
+        configure_file(${DLL_FILE} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
     endforeach()
 
     file(GLOB_RECURSE LIB_FILES "${FFMPEG_DIR}/*.lib")
 
     target_link_libraries(${PROJECT_NAME}
-        PRIVATE
+        PUBLIC
             ${LIB_FILES}
     )
 
@@ -254,6 +254,5 @@ if(ANDROID AND ANDROID_TARGET_ARCH___equals___x86_64)
         # Remove: L$ENV{AVPLAYER_ANDROID_LIB_X86_64}
     )
 endif()
-
 
 
