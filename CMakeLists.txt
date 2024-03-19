@@ -145,6 +145,9 @@ if(WIN32)
         PUBLIC
             "${FFMPEG_DIR}/include"
     )
+
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/functions.cmake)
+    configure_files(${FFMPEG_DIR}/include ${CMAKE_BINARY_DIR} ".h")
 endif()
 
 if(NOT EXISTS ENABLE_MULTIMEDIA)
