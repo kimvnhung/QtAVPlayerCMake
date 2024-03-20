@@ -46,7 +46,7 @@ public:
     ~QAVDemuxer();
 
     void abort(bool stop = true);
-    int load(const QString &url, QAVIODevice *dev = nullptr);
+    int load(const QString &url,bool isNoDelay = false, QAVIODevice *dev = nullptr);
     void unload();
 
     AVMediaType currentCodecType(int index) const;

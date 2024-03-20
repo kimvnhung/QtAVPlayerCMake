@@ -18,6 +18,12 @@
 
 QT_BEGIN_NAMESPACE
 
+enum Config{
+    NoDelay = 1,
+    FastDecode = 2,
+    GPUDecode = 4
+};
+
 class QAVIODevice;
 class QAVPlayerPrivate;
 class QAVPlayer : public QObject
@@ -50,10 +56,12 @@ public:
         FilterError
     };
 
+
+
     QAVPlayer(QObject *parent = nullptr);
     ~QAVPlayer();
 
-    void setSource(const QString &url, const QSharedPointer<QAVIODevice> &dev = {});
+    void setSource(const QString &url, int configs = 0, const QSharedPointer<QAVIODevice> &dev = {});
     QString source() const;
 
     QList<QAVStream> availableVideoStreams() const;

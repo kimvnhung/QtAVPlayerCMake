@@ -127,6 +127,7 @@ public:
     double currPts = 0.0;
     mutable QMutex positionMutex;
     bool synced = true;
+    int configs = 0;
 
     QAVPlayer::Error error = QAVPlayer::NoError;
 
@@ -503,7 +504,7 @@ void QAVPlayerPrivate::doLoad()
 {
     demuxer.abort(false);
     demuxer.unload();
-    int ret = demuxer.load(url, dev.get());
+    int ret = demuxer.load(url,configs & NoDelay,dev.get());
     if (ret < 0) {
         setError(QAVPlayer::ResourceError, err_str(ret));
         return;
@@ -872,7 +873,7 @@ QAVPlayer::~QAVPlayer()
     d->terminate();
 }
 
-void QAVPlayer::setSource(const QString &url, const QSharedPointer<QAVIODevice> &dev)
+void QAVPlayer::setSource(const QString &url,int configs, const QSharedPointer<QAVIODevice> &dev)
 {
     Q_D(QAVPlayer);
     if (d->url == url)
@@ -888,6 +889,9 @@ void QAVPlayer::setSource(const QString &url, const QSharedPointer<QAVIODevice> 
     d->quit = false;
     if (url.isEmpty())
         return;
+
+    //add custom config
+    d->configs = configs;
 
     d->setPendingMediaStatus(LoadingMedia);
 

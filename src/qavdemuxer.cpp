@@ -305,7 +305,7 @@ static int apply_bsf(const QString &bsf, AVFormatContext *ctx, AVBSFContext *&bs
     return ret;
 }
 
-int QAVDemuxer::load(const QString &url, QAVIODevice *dev)
+int QAVDemuxer::load(const QString &url, bool isNoDelay, QAVIODevice *dev)
 {
     Q_D(QAVDemuxer);
     QMutexLocker locker(&d->mutex);
@@ -317,9 +317,12 @@ int QAVDemuxer::load(const QString &url, QAVIODevice *dev)
     d->ctx->interrupt_callback.callback = decode_interrupt_cb;
     d->ctx->interrupt_callback.opaque = d;
 // add to reduce delay
-    d->ctx->flags |= AVFMT_FLAG_NOBUFFER | AVFMT_FLAG_FLUSH_PACKETS;
-    d->ctx->probesize = 32;
-    d->ctx->max_analyze_duration = 32;
+    if(isNoDelay){
+        qDebug()<<"NO_DELAY is turned on";
+        d->ctx->flags |= AVFMT_FLAG_NOBUFFER | AVFMT_FLAG_FLUSH_PACKETS;
+        d->ctx->probesize = 32;
+        d->ctx->max_analyze_duration = 32;
+    }
 //
     if (dev) {
         d->ctx->pb = dev->ctx();
